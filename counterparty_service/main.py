@@ -5,7 +5,6 @@ from pydantic import BaseModel
 from datetime import date
 from typing import List
 
-# Импорты из нашей общей папки shared
 from shared.database import engine, get_db, Base
 from shared.errors import DomainException, domain_exception_handler
 
@@ -34,8 +33,6 @@ class DBContract(Base):
 # Создаем таблицы в БД
 Base.metadata.create_all(bind=engine)
 
-
-# --- СХЕМЫ ДЛЯ API (Pydantic) ---
 
 class ContractCreate(BaseModel):
     number: str
@@ -112,8 +109,6 @@ def check_contract(id: int, db: Session = Depends(get_db)):
 
 
 # --- ПАТТЕРН ADAPTER (Заглушка для 1С) ---
-# В реальности здесь был бы класс, который делает SOAP-запрос к 1С.
-# Сейчас мы просто имитируем получение данных из внешней системы.
 @app.post("/sync/1c")
 def sync_from_1c(inn: str):
     """

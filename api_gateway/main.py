@@ -22,10 +22,6 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     except jwt.PyJWTError:
         raise HTTPException(status_code=401, detail="Неверный или истекший токен")
 
-# ==========================================
-# СХЕМЫ ДЛЯ SWAGGER (Pydantic)
-# ==========================================
-
 class LoginData(BaseModel):
     username: str
     password: str
@@ -61,9 +57,8 @@ class PaymentCreate(BaseModel):
     amount: float
 
 
-# ==========================================
 # 1. АУТЕНТИФИКАЦИЯ
-# ==========================================
+
 @app.post("/api/auth/login")
 async def login_proxy(username: str = Form(...), password: str = Form(...)):
     """Логин (в Swagger нажмите Try it out и введите данные)."""
@@ -75,9 +70,8 @@ async def login_proxy(username: str = Form(...), password: str = Form(...)):
         return JSONResponse(status_code=resp.status_code, content=resp.json())
 
 
-# ==========================================
 # 2. ПРОДУКЦИЯ И СКЛАД (Product Service)
-# ==========================================
+
 @app.get("/api/products")
 async def get_products(user: dict = Depends(verify_token)):
     async with httpx.AsyncClient() as client:
@@ -106,9 +100,8 @@ async def add_income(product_id: int, quantity: float, user: dict = Depends(veri
         return JSONResponse(status_code=resp.status_code, content=resp.json())
 
 
-# ==========================================
 # 3. КОНТРАГЕНТЫ (Counterparty Service)
-# ==========================================
+
 @app.get("/api/counterparties")
 async def get_counterparties(user: dict = Depends(verify_token)):
     async with httpx.AsyncClient() as client:
@@ -126,9 +119,8 @@ async def create_counterparty(cp: CounterpartyCreate, user: dict = Depends(verif
         return JSONResponse(status_code=resp.status_code, content=resp.json())
 
 
-# ==========================================
 # 4. ЗАКАЗЫ (Order Service)
-# ==========================================
+
 @app.post("/api/orders")
 async def create_order(order: OrderCreate, user: dict = Depends(verify_token)):
     async with httpx.AsyncClient() as client:
@@ -149,9 +141,8 @@ async def confirm_order(order_id: int, user: dict = Depends(verify_token)):
         return JSONResponse(status_code=resp.status_code, content=resp.json())
 
 
-# ==========================================
 # 5. ФИНАНСЫ (Finance Service)
-# ==========================================
+
 @app.post("/api/payments")
 async def create_payment(payment: PaymentCreate, user: dict = Depends(verify_token)):
     async with httpx.AsyncClient() as client:
@@ -165,9 +156,8 @@ async def get_debt(counterparty_id: int, user: dict = Depends(verify_token)):
         return JSONResponse(status_code=resp.status_code, content=resp.json())
 
 
-# ==========================================
 # 6. УНИВЕРСАЛЬНЫЙ РОУТ (запасной)
-# ==========================================
+
 @app.api_route("/api/{service_name}/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
 async def gateway_router(
     service_name: str, 

@@ -7,7 +7,6 @@ class ProductCreate:
     category: str
     price: float
 
-# Базовый класс (в реальности здесь была бы логика хранения)
 class BaseProduct:
     def __init__(self, name, category, unit, shelf_life, price):
         self.name = name
@@ -33,7 +32,7 @@ class MeatProduct(BaseProduct):
     def __init__(self, name, price):
         super().__init__(name, "Мясо", "кг", 5, price)
 
-# --- САМ ПАТТЕРН FACTORY METHOD ---
+# --- ПАТТЕРН FACTORY METHOD ---
 class ProductFactory:
     """Создает продукт нужного типа на основе категории."""
     @staticmethod

@@ -1,4 +1,3 @@
-# Адреса сервисов (порты должны совпадать с теми, на которых вы их запускаете)
 SERVICES = {
     "products": "http://localhost:8001",
     "counterparties": "http://localhost:8002",
@@ -7,6 +6,6 @@ SERVICES = {
     "identity": "http://localhost:8005"
 }
 
-# Секретный ключ для проверки JWT (должен совпадать с тем, что в Identity Service)
+# Секретный ключ для проверки JWT
 JWT_SECRET = "SUPER_SECRET_KEY_AGRI_SALES"
 JWT_ALGORITHM = "HS256"
